@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const sqlite3 = require('sqlite3');
+const {
+    check,
+    validationResult
+} = require('express-validator');
 
 const db = new sqlite3.Database('mydb.sqlite3');
 
@@ -27,20 +31,27 @@ router.get('/', (req, res, next) => {
 router.get('/add', (req, res, next) => {
     var data = {
         title: 'Hello/Add',
-        content: '新しいレコード：'
+        content: '新しいレコードを入力：',
+        form: {
+            name: '',
+            mail: '',
+            age: 0
+        }
     }
     res.render('hello/add', data);
 });
 
-router.post('/add', (req, res, next) => {
-    const nm = req.body.name;
-    const ml = req.body.mail;
-    const ag = req.body.age;
-    db.serialize(() => {
-        db.run('insert into mydata (name, mail, age) values (?, ?, ?)', nm, ml, ag);
-    });
-    res.redirect('/hello')
-});
+router.post('/add', [
+    check('name', 'NAME は必ず入力してください。').notEmpty(),
+    check('mail', 'MAIL はメールアドレスを記入してください。').isEmail(),
+    check('age', 'AGE は年齢(整数)を入力してください。').isInt()
+], (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        var result = '<ul class="text-danger">';
+    }
+})
 
 router.get('/show', (req, res, next) => {
     const id = req.query.id;
