@@ -44,7 +44,10 @@ router.get('/add', (req, res, next) => {
 router.post('/add', [
     check('name', 'NAME は必ず入力してください。').notEmpty().escape(),
     check('mail', 'MAIL はメールアドレスを記入してください。').isEmail().escape(),
-    check('age', 'AGE は年齢(整数)を入力してください。').isInt()
+    check('age', 'AGE は年齢(整数)を入力してください。').isInt(),
+    check('age', 'AGE はゼロ以上120以下で入力してください。').custom(value => {
+        return value >= 0 & value <= 120;
+    })
 ], (req, res, next) => {
     const errors = validationResult(req);
 
