@@ -50,8 +50,27 @@ router.post('/add', [
 
     if (!errors.isEmpty()) {
         var result = '<ul class="text-danger">';
+        var result_arr = errors.array();
+        for (var n in result_arr) {
+            result += '<li>' + result_arr[n].msg + '</li>'
+        }
+        result += '</ul>';
+        var data = {
+            title: 'Hello/Add',
+            content: result,
+            form: req.body
+        }
+        res.render('hello/add', data);
+    } else {
+        var nm = req.body.name;
+        var ml = req.body.mail;
+        var ag = req.body.age;
+        db.serialize(() => {
+            db.run('insert into mydata (name, mail, age) values (?, ?, ?)', nm, ml, ag);
+        });
+        res.redirect('/hello');
     }
-})
+});
 
 router.get('/show', (req, res, next) => {
     const id = req.query.id;
