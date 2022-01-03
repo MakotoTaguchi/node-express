@@ -9,15 +9,33 @@ const {
 router.get('/', (req, res, next) => {
   const id = req.query.id;
   const nm = req.query.name;
+  const ml = req.query.mail;
+  const min = req.query.min * 1
+  const max = req.query.max * 1
   db.User.findAll({
     where: {
       // id: id
       // id: {
       //   [Op.lte]: id
       // },
-      name: {
-        [Op.like]: '%' + nm + '%'
-      }
+      // name: {
+      //   [Op.like]: '%' + nm + '%'
+      // }
+      // age: {
+      //   [Op.gte]: min,
+      //   [Op.lte]: max
+      // }
+      [Op.or]: [{
+          name: {
+            [Op.like]: '%' + nm + '%'
+          }
+        },
+        {
+          mail: {
+            [Op.like]: '%' + ml + '%'
+          }
+        }
+      ]
     }
   }).then(usrs => {
     var data = {
