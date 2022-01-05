@@ -25,17 +25,17 @@ router.get('/', (req, res, next) => {
       //   [Op.gte]: min,
       //   [Op.lte]: max
       // }
-      [Op.or]: [{
-          name: {
-            [Op.like]: '%' + nm + '%'
-          }
-        },
-        {
-          mail: {
-            [Op.like]: '%' + ml + '%'
-          }
-        }
-      ]
+      // [Op.or]: [{
+      //     name: {
+      //       [Op.like]: '%' + nm + '%'
+      //     }
+      //   },
+      //   {
+      //     mail: {
+      //       [Op.like]: '%' + ml + '%'
+      //     }
+      //   }
+      // ]
     }
   }).then(usrs => {
     var data = {
@@ -51,6 +51,24 @@ router.get('/', (req, res, next) => {
   //   }
   //   res.render('users/index', data);
   // });
+});
+
+router.get('/add', (req, res, next) => {
+  var data = {
+    title: 'User/Add'
+  }
+  res.render('users/add', data);
+});
+
+router.post('/add', (req, res, next) => {
+  db.sequelize.sync().then(() => db.User.create({
+    name: req.body.name,
+    pass: req.body.pass,
+    mail: req.body.mail,
+    age: req.body.age
+  })).then(usr => {
+    res.redirect('/users');
+  });
 });
 
 module.exports = router;
