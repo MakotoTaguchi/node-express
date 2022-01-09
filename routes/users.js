@@ -138,7 +138,7 @@ router.post('/delete', (req, res, next) => {
 
 router.get('/login', (req, res, next) => {
   var data = {
-    title: 'User/Login',
+    title: 'Users/Login',
     content: '名前とパスワードを入力してください。'
   }
   res.render('users/login', data);

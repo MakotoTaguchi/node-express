@@ -35,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var hello = require('./routes/hello');
 app.use('/hello', hello);
+app.use('/boards', boardsRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -53,7 +54,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.use('/boards', boardsRouter);
 
 module.exports = app;
